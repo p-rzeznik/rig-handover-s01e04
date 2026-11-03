@@ -38,5 +38,12 @@ export function createApp(config: RigConfig = loadConfig()) {
     );
   });
 
+  app.get('/api/digest/:night', (c) => {
+    const night = c.req.param('night');
+    const data = readNight(config.runsDir, night);
+    if (data === null) return c.json({ error: `no digest for ${night}` }, 404);
+    return c.json({ night, rows: data.rows, badLines: data.badLines });
+  });
+
   return app;
 }
